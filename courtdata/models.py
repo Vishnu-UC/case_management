@@ -13,7 +13,7 @@ class MstPartyRepresentationType(models.Model):
 
 
 class MstPartyType(models.Model):
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=20, unique=True)
 
     class Meta:
         db_table = 'mst_party_type'
@@ -24,7 +24,7 @@ class MstPartyType(models.Model):
 
 
 class Attorney(models.Model):
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=20, unique=True)
 
     class Meta:
         db_table = 'attorney'
@@ -35,7 +35,7 @@ class Attorney(models.Model):
 
 
 class MstCaseTypeCategory(models.Model):
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=20, unique=True)
 
     class Meta:
         db_table = 'mst_case_type_category'
@@ -47,11 +47,12 @@ class MstCaseTypeCategory(models.Model):
 
 class MstCaseTypeGroup(models.Model):
     mst_case_type_category = models.ForeignKey(MstCaseTypeCategory, on_delete=models.CASCADE)
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30, unique=True)
 
     class Meta:
         db_table = 'mst_case_type_group'
         verbose_name = "Case Type Group"
+        unique_together = ("mst_case_type_category", "name")
 
     def __str__(self):
         return self.mst_case_type_category, self.name
@@ -59,18 +60,19 @@ class MstCaseTypeGroup(models.Model):
 
 class MstCaseType(models.Model):
     mst_case_type_group = models.ForeignKey(MstCaseTypeGroup, on_delete=models.CASCADE)
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30, unique=True)
 
     class Meta:
         db_table = 'mst_case_type'
         verbose_name = "Case Type"
+        unique_together = ("mst_case_type_group", "name")
 
     def __str__(self):
         return self.mst_case_type_group, self.name
 
 
 class MstCaseStatusCategory(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30, unique=True)
 
     class Meta:
         db_table = 'mst_case_status_category'
@@ -81,7 +83,7 @@ class MstCaseStatusCategory(models.Model):
 
 
 class MstCaseStatus(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30, unique=True)
 
     class Meta:
         db_table = 'mst_case_status'
@@ -92,7 +94,7 @@ class MstCaseStatus(models.Model):
 
 
 class MstJurisdiction(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30, unique=True)
 
     class Meta:
         db_table = 'mst_jurisdiction'
@@ -104,11 +106,12 @@ class MstJurisdiction(models.Model):
 
 class MstCourthouse(models.Model):
     mst_jurisdiction = models.ForeignKey(MstJurisdiction, on_delete=models.CASCADE)
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30, unique=True)
 
     class Meta:
         db_table = 'mst_courthouse'
         verbose_name = "Courthouse"
+        unique_together = ("mst_jurisdiction", "name")
 
     def __str__(self):
         return self.name
