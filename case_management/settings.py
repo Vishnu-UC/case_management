@@ -75,8 +75,12 @@ WSGI_APPLICATION = 'case_management.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'court_data',
+        'USER': 'mispl',
+        'PASSWORD': 'Code@mispl',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
