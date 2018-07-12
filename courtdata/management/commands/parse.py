@@ -1,6 +1,7 @@
 import argparse
 import csv
 import re
+from datetime import datetime
 
 from django.core.management.base import BaseCommand
 
@@ -136,13 +137,6 @@ class PartyType(object):
 
 
 class PartyRepresentationType(object):
-    # obj1, created = MstPartyType.objects.get_or_create(name=row[2])
-    # obj2, created = MstPartyRepresentationType.objects.get_or_create(name=row[3])
-    # obj3, created = Attorney.objects.get_or_create(name=row[4])
-    # obj4 = CourtCase.objects.get(case_key=row[0])
-    # obj5 = Party(case_id=obj4.id, name=row[1], mst_party_type=obj1.id,
-    #              mst_party_representation_type=obj2.id, attorney=obj3.id)
-    # obj5.save()
     def __init__(self):
         self.__name: str = None
 
@@ -183,10 +177,14 @@ class CParty(object):
         self.__attorney_object = None
         self.__courtcase_object = None
 
+    def create(self, name):
+        self.__name = name
+
     def save(self):
         obj = Party(case_id=self.__courtcase_object, name=self.__name, mst_party_type=self.__party_type_object,
                     mst_party_representation_type=self.__party_representation_type_object,
                     attorney=self.__attorney_object)
+        obj.save()
 
     def set_party_type(self, party_type_name):
         party_type_object = CaseType()
@@ -242,10 +240,10 @@ class CCourtCase(object):
         self.__case_key = case_key
         self.__case_name = case_name
         self.__case_number = case_number
-        self.__filing_date = filing_date
+        self.__filing_date = datetime.strptime(filing_date, '%m/%d/%Y')
         self.__judge_name = judge_name
-        self.__created_date = created_date
-        self.__last_update_date = last_update_date
+        self.__created_date = datetime.strptime(created_date, '%m/%d/%Y %H:%M:%S')
+        self.__last_update_date = datetime.strptime(last_update_date, '%m/%d/%Y %H:%M:%S')
 
     def save(self):
         obj = CourtCase(case_key=self.__case_key, case_name=self.__case_name, case_number=self.__case_number,
@@ -256,6 +254,39 @@ class CCourtCase(object):
                         created_date=self.__created_date, last_update_date=self.__last_update_date)
 
         obj.save()
+
+    # @property
+    # def filing_date(self):
+    #     return self.__filing_date
+    #
+    # @filing_date.setter
+    # def filing_date(self, datestr):
+    #     try:
+    #         self.__filing_date = parse(datestr)
+    #     except ValueError:
+    #         print(f"CSV Data is {datestr}")
+    #
+    # @property
+    # def created_date(self):
+    #     return self.__created_date
+    #
+    # @created_date.setter
+    # def created_date(self, datestr):
+    #     try:
+    #         self.__created_date = parse(datestr)
+    #     except ValueError:
+    #         print(f"CSV Data is {datestr}")
+    #
+    # @property
+    # def last_update_date(self):
+    #     return self.__last_update_date
+    #
+    # @last_update_date.setter
+    # def last_update_date(self, datestr):
+    #     try:
+    #         self.__last_update_date = parse(datestr)
+    #     except ValueError:
+    #         print(f"CSV Data is {datestr}")
 
     @property
     def case_key(self):
@@ -349,11 +380,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         file = options['filename']
-        if re.search(r'UniCourt_Cases', options['filename']):
+        if re.search(r'UniCourt_Cases', str(options['filename'])):
             reader = csv.reader(file)
-            for row in reader:
+            for row in list(reader)[1:]:
                 c = CCourtCase()
-                c.create(row[0], row[1], row[2], row[3], row[13], created_date=row[11], last_update_date=row[12])
+                c.create(row[0], row[1], row[2], row[3], row[13], row[11], row[12])
                 c.set_case_type_category(row[4])
                 c.set_case_type_group(row[5])
                 c.set_case_type(row[6])
@@ -367,7 +398,7 @@ class Command(BaseCommand):
             reader = csv.reader(file)
             for row in reader:
                 p = CParty()
-                p.name(row[0])
+                p.create(row[1])
                 p.set_party_type(row[2])
                 p.set_party_representation_type(row[3])
                 p.set_attorney(row[4])
