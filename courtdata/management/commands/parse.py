@@ -171,7 +171,7 @@ class CParty(object):
 
     def __init__(self):
         self.__name: str = None
-        self.__case_id = None
+        self.__court_case_id = None
         self.__party_type_object = None
         self.__party_representation_type_object = None
         self.__attorney_object = None
@@ -181,7 +181,7 @@ class CParty(object):
         self.__name = name
 
     def save(self):
-        obj = Party(case_id=self.__courtcase_object, name=self.__name, mst_party_type=self.__party_type_object,
+        obj = Party(court_case=self.__courtcase_object, name=self.__name, mst_party_type=self.__party_type_object,
                     mst_party_representation_type=self.__party_representation_type_object,
                     attorney=self.__attorney_object)
         obj.save()
@@ -246,47 +246,17 @@ class CCourtCase(object):
         self.__last_update_date = datetime.strptime(last_update_date, '%m/%d/%Y %H:%M:%S')
 
     def save(self):
-        obj = CourtCase(case_key=self.__case_key, case_name=self.__case_name, case_number=self.__case_number,
-                        filing_date=self.__filing_date,
-                        mst_case_type=self.__case_type_object, mst_case_status=self.__case_status_object,
-                        mst_case_status_category=self.__case_status_category_object,
-                        mst_courthouse=self.__courthouse_object, judge_name=self.__judge_name,
-                        created_date=self.__created_date, last_update_date=self.__last_update_date)
+        obj, _ = CourtCase.objects.get_or_create(case_key=self.__case_key, case_name=self.__case_name,
+                                                 case_number=self.__case_number, filing_date=self.__filing_date,
+                                                 mst_case_type=self.__case_type_object,
+                                                 mst_case_status=self.__case_status_object,
+                                                 mst_case_status_category=self.__case_status_category_object,
+                                                 mst_courthouse=self.__courthouse_object,
+                                                 judge_name=self.__judge_name,
+                                                 created_date=self.__created_date,
+                                                 last_update_date=self.__last_update_date)
 
         obj.save()
-
-    # @property
-    # def filing_date(self):
-    #     return self.__filing_date
-    #
-    # @filing_date.setter
-    # def filing_date(self, datestr):
-    #     try:
-    #         self.__filing_date = parse(datestr)
-    #     except ValueError:
-    #         print(f"CSV Data is {datestr}")
-    #
-    # @property
-    # def created_date(self):
-    #     return self.__created_date
-    #
-    # @created_date.setter
-    # def created_date(self, datestr):
-    #     try:
-    #         self.__created_date = parse(datestr)
-    #     except ValueError:
-    #         print(f"CSV Data is {datestr}")
-    #
-    # @property
-    # def last_update_date(self):
-    #     return self.__last_update_date
-    #
-    # @last_update_date.setter
-    # def last_update_date(self, datestr):
-    #     try:
-    #         self.__last_update_date = parse(datestr)
-    #     except ValueError:
-    #         print(f"CSV Data is {datestr}")
 
     @property
     def case_key(self):
@@ -394,9 +364,9 @@ class Command(BaseCommand):
                 c.set_courthouse(row[10])
                 c.save()
 
-        elif CourtCase.objects.all.count() != 0:
+        elif len(CourtCase.objects.all()) != 0:
             reader = csv.reader(file)
-            for row in reader:
+            for row in list(reader)[1:]:
                 p = CParty()
                 p.create(row[1])
                 p.set_party_type(row[2])

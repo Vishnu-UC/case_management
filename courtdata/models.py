@@ -2,7 +2,7 @@ from django.db import models
 
 
 class MstPartyRepresentationType(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=200, unique=True)
 
     class Meta:
         db_table = 'mst_party_representation_type'
@@ -13,7 +13,7 @@ class MstPartyRepresentationType(models.Model):
 
 
 class MstPartyType(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=200, unique=True)
 
     class Meta:
         db_table = 'mst_party_type'
@@ -24,7 +24,7 @@ class MstPartyType(models.Model):
 
 
 class Attorney(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=200, unique=True)
 
     class Meta:
         db_table = 'attorney'
@@ -35,7 +35,7 @@ class Attorney(models.Model):
 
 
 class MstCaseTypeCategory(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=200, unique=True)
 
     class Meta:
         db_table = 'mst_case_type_category'
@@ -47,7 +47,7 @@ class MstCaseTypeCategory(models.Model):
 
 class MstCaseTypeGroup(models.Model):
     mst_case_type_category = models.ForeignKey(MstCaseTypeCategory, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=200, unique=True)
 
     class Meta:
         db_table = 'mst_case_type_group'
@@ -60,7 +60,7 @@ class MstCaseTypeGroup(models.Model):
 
 class MstCaseType(models.Model):
     mst_case_type_group = models.ForeignKey(MstCaseTypeGroup, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=200, unique=True)
 
     class Meta:
         db_table = 'mst_case_type'
@@ -72,7 +72,7 @@ class MstCaseType(models.Model):
 
 
 class MstCaseStatusCategory(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=200, unique=True)
 
     class Meta:
         db_table = 'mst_case_status_category'
@@ -83,7 +83,7 @@ class MstCaseStatusCategory(models.Model):
 
 
 class MstCaseStatus(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=200, unique=True)
 
     class Meta:
         db_table = 'mst_case_status'
@@ -94,7 +94,7 @@ class MstCaseStatus(models.Model):
 
 
 class MstJurisdiction(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=200, unique=True)
 
     class Meta:
         db_table = 'mst_jurisdiction'
@@ -106,7 +106,7 @@ class MstJurisdiction(models.Model):
 
 class MstCourthouse(models.Model):
     mst_jurisdiction = models.ForeignKey(MstJurisdiction, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=200, unique=True)
 
     class Meta:
         db_table = 'mst_courthouse'
@@ -118,15 +118,15 @@ class MstCourthouse(models.Model):
 
 
 class CourtCase(models.Model):
-    case_key = models.CharField(max_length=100)
-    case_name = models.CharField(max_length=100)
-    case_number = models.CharField(max_length=100)
+    case_key = models.CharField(max_length=400, unique=True)
+    case_name = models.CharField(max_length=400)
+    case_number = models.CharField(max_length=400)
     filing_date = models.DateField()
     mst_case_type = models.ForeignKey(MstCaseType, on_delete=models.CASCADE)
     mst_case_status = models.ForeignKey(MstCaseStatus, on_delete=models.CASCADE)
     mst_case_status_category = models.ForeignKey(MstCaseStatusCategory, on_delete=models.CASCADE)
     mst_courthouse = models.ForeignKey(MstCourthouse, on_delete=models.CASCADE)
-    judge_name = models.CharField(max_length=100)
+    judge_name = models.CharField(max_length=400)
     created_date = models.DateTimeField()
     last_update_date = models.DateTimeField()
 
@@ -140,7 +140,7 @@ class CourtCase(models.Model):
 
 class Party(models.Model):
     court_case = models.ForeignKey(CourtCase, on_delete=models.CASCADE)
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=200)
     mst_party_type = models.ForeignKey(MstPartyType, on_delete=models.CASCADE)
     mst_party_representation_type = models.ForeignKey(MstPartyRepresentationType, on_delete=models.CASCADE)
     attorney = models.ForeignKey(Attorney, on_delete=models.CASCADE)
