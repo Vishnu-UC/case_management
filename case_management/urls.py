@@ -16,7 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+import courtdata.urls as court_url
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('details/', include('courtdata.urls'))
+    path('details/', include(court_url)),
 ]

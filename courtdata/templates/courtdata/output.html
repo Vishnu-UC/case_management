@@ -2,16 +2,63 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+          integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+
     <title>Case Details</title>
-    <div>
-        <p>Case key:{{courtcase.case_key}} &nbsp;&nbsp; Case name: {{courtcase.case_name}}</p><br/>
-        <p>Case Number:{{courtcase.case_number}}&nbsp;&nbsp;Filing date:{{courtcase.filing_date}}</p><br/>
-        <p>Case type:{{case_type.name}}&nbsp;&nbsp;Case Type Group:{{case_type_group.name}}</p><br/>
-        <p>Case type Category:{{case_type_category.name}}&nbsp;&nbsp;Case Type Group:{{case_type_group.name}}</p><br/>
-        <p>Court house:{{courthouse.name}}&nbsp;&nbsp;Jurisdiction:{{jurisdiction.name}}</p><br/>
-    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
 </head>
 <body>
+<div class="alert alert-primary" role="alert">
+    <p><b>Case key</b>:{{courtcase.case_key}} &nbsp;&nbsp; <b>Case name</b>: {{courtcase.case_name}}</p>
+    <p><b>Case Number</b>:{{courtcase.case_number}}&nbsp;&nbsp;<b>Filing date</b>:{{courtcase.filing_date}}</p>
+    <p><b>Case type</b>:{{courtcase.mst_case_type.name}}&nbsp;&nbsp;<b>Case Type Group</b>:{{courtcase.mst_case_type.mst_case_type_group.name}}
+    </p>
+    <p><b>Case type Category</b>:{{courtcase.mst_case_type.mst_case_type_group.mst_case_type_category.name}}</p>
+    <p><b>Case Status category</b>:{{courtcase.mst_case_status_category.name}}&nbsp;&nbsp;<b>Case status</b>:{{courtcase.mst_case_status.name}}
+    </p>
+    <p><b>Court house</b>:{{courtcase.mst_courthouse.name}}&nbsp;&nbsp;<b>Jurisdiction</b>:{{courtcase.mst_courthouse.mst_jurisdiction.name}}
+    </p>
+    <p><b>Created date</b>:{{courtcase.created_date}}&nbsp;&nbsp;<b>Last update date</b>:{{courtcase.last_update_date}}
+    </p>
+</div>
+<table class="table table-striped table-dark">
+    <thead>
+    <tr>
+        <th scope="col">No.</th>
+        <th scope="col">Party name</th>
+        <th scope="col">Party type</th>
+        <th scope="col">Party Represntation Type</th>
+        <th scope="col">Attorney</th>
+    </tr>
+    </thead>
+    <tbody>
 
+    {%for party in parties%}
+    <tr>
+        <th scope="row">{{forloop.counter}}</th>
+        <td>{{party.name}}</td>
+        <td>{{party.mst_party_type.name}}</td>
+        <td>{{party.mst_party_representation_type}}</td>
+        <td>{{party.attorney.name}}</td>
+    </tr>
+    </tbody>
+    {% endfor %}
+</table>
+</body>
 </body>
 </html>
